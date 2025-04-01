@@ -8,7 +8,7 @@ import random
 #     encoding = result['encoding']
 
 # 读取CSV文件
-df = pd.read_csv('儿科_修正.csv', encoding='GB2312')
+df = pd.read_csv('erke_100k.csv', encoding='GB2312')
 
 # 确保第一行是列名
 # 如果不是列名，可以使用names参数指定列名，或者使用header参数指定哪一行是列名

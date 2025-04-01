@@ -12,7 +12,7 @@ config = {
 
 
 # 1. 打开CSV文件并按行分块
-def process_csv_file(csv_file_path):
+def process_csv_file(csv_file_path, encoding):
     """
     打开CSV文件，读取每一行的内容并进行分块, 按行分块后返回一个包含所有分块文本的列表
     :param csv_file_path: CSV文件路径
@@ -21,7 +21,7 @@ def process_csv_file(csv_file_path):
     all_chunks = []
 
     # 打开CSV文件并按行读取
-    with open(csv_file_path, 'r', newline='', encoding=config['encoding']) as file:
+    with open(csv_file_path, 'r', newline='', encoding=encoding) as file:
         reader = csv.DictReader(file)  # 使用DictReader以便根据列名访问数据
 
         for row in reader:
@@ -35,7 +35,7 @@ def ollama_embedding_by_api(text):
     res = requests.post(
         url="http://127.0.0.1:11434/api/embeddings",
         json={
-            "model": "nomic-embed-text",
+            "model": "quentinz/bge-large-zh-v1.5",
             "prompt": text
         }
     )
@@ -48,15 +48,12 @@ def ollama_embedding_by_api(text):
     return embedding
 
 
-def run(csv_file_path):
+def run(csv_file_path, encoding):
     vector_list = []
-    chunk_list = process_csv_file(csv_file_path)
-    # #只处理前100个
-    # chunk_list = chunk_list[:100]
+    chunk_list = process_csv_file(csv_file_path, encoding)
     for chunk in tqdm(chunk_list, desc='Embedding'):
         vector = ollama_embedding_by_api(chunk)
         vector_list.append(vector)
-        # print(len(vector), vector)
     return vector_list, chunk_list
 
 
